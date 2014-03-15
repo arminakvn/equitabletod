@@ -1,22 +1,22 @@
 @Equitabletod.module "Entities", (Entities, App, Backbone, Marionette, $, _) ->
 
-  class Entities.Fstation extends Backbone.Leaflet.GeoModel
-  
-  class Entities.FstationsCollection extends Backbone.Leaflet.GeoCollection
-  	model: Entities.Fstation
+  GeoModel = new Backbone.Leaflet.GeoModel
+  class Entities.FstationsCollection extends Entities.Collection
   	url: "/station_areas.json"
 
   API =
   	getFstationsEntities: ->
-  	    fstations = new Entities.FstationsCollection
-  	    fstations.fetch()
+  	    geojsonFeatureCollection = new Entities.FstationsCollection
+  	    geojsonFeatureCollection.fetch()
 
-  	getFstation: (fstation) ->
-  	    fstation = new Entities.Fstation({ id: fstation });
+  	getFstation: (stn_id) ->
+  	    fstation = new Entities.Fstation({ id: stn_id })
   	    fstation.fetch()
 
   App.reqres.setHandler 'fstation:entities', ->
-      API.getFstationsEntities()
+      geojsonFeatureCollection = API.getFstationsEntities()
+      fstations = new Backbone.Leaflet.GeoCollection(geojsonFeatureCollection)
+      fstations
 
-  App.reqres.setHandler 'fstation:entity', (fstation) ->
-      API.getFstation(fstation)
+  App.reqres.setHandler 'fstation:entity', (stn_id) ->
+      API.getFstation(stn_id)

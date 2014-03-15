@@ -4,11 +4,12 @@
   class MainApp.Router extends Marionette.AppRouter
     appRoutes:
       "home": "showHomeRegion"
-      "usrguid": "showUsrGuid"
       "map": "provideMap"
       "search/submit": "searchSubmit"
-#      "map/": "provideMap"
+      "carousel": "showCarousel"
+      "map/": "provideMap"
   
+  MainApp.vent = new Backbone.Wreqr.EventAggregator()
   
   API =
     showHomeRegion: ->
@@ -17,31 +18,40 @@
     showCarousel: ->
       MainApp.Carousel.Controller.showCarousel()
 
-
     showSimpleSearchForm: ->
       MainApp.Search.Controller.showSimpleSearchForm()
 
     provideMap: ->
       MainApp.Map.Controller.addMap()
 
-    searchSubmit: ->
-      MainApp.Search.Controller.submit('search:submit')
+    showResultsPage: ->
+      MainApp.Results.Controller.showResultsView()
 
 
 #    removeHomeRegion: =>
 #      @RegionMan.reset()
 
-    #showUsrGuid: ->
-    #	MainApp.UsrGuid.Controller.showUsrGuid()
+  MainApp.vent.on "cleanHome", ->
+    App.vent.trigger "cleanHomeRegion"
+    API.showHomeRegion()
+
+  MainApp.vent.on "cleanForGuid", ->
+    App.vent.trigger "cleanHomeRegion"
+
+
 
     
 #    showSearchModule: ->
 #      MainApp.Search.Controller.showSearchModule()
 #    provideMap: ->
 #      MainApp.Map.Controller.provideMap()
+  MainApp.on "initialize:before", ->
+    fstations = App.request 'fstation:entities'
+    
   MainApp.on "start", ->
-#    API.showSearchModule()
 #    API.showHomeRegion()
-    API.showCarousel()
-    API.showSimpleSearchForm()
-#    API.provideMap()
+#    API.showSearchModule()
+#    API.showSimpleSearchForm()   
+#    API.showCarousel()
+#    API.showResultsPage()
+    API.provideMap()

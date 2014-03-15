@@ -1,13 +1,12 @@
 @Equitabletod.module "MainApp.Search", (Search, App, Backbone, Marionette, $, _) ->
 
-	class Search.SimpleSearchFormItemView extends App.Views.ItemView
+    class Search.SimpleSearchFormLayout extends App.Views.Layout
         template: "main/search/templates/simple_search_layout" 
-
-        tagName: "div"
+        itemViewContainer: "#form-horizontal"
         className: "col-sm-6 col-sm-offset-0 text-left"
         events: 
             'click #searchbuttom': 'inputChange'
-            'click #resetbuttom':  'resetFormArgs'
+            'click #resetbuttom':  'resetFormArgs' 
 
         inputChange: (e)=>
             query = []

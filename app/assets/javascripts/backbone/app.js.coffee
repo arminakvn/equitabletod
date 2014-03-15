@@ -2,6 +2,7 @@
 
   App = new Marionette.Application 
   RegionMan = new Marionette.RegionManager
+  App.vent = new Backbone.Wreqr.EventAggregator()
 
   App.addRegions
     headerRegion: "#header-region"
@@ -15,13 +16,23 @@
 
   RegionMan.addRegions
     mapRegion: "#map"
-    homeRegion: "#home"
+#    carouselRegion: "#carousel-region"
+#    homeRegion: "#home"
+#    usrGuidRegion: "#usrguid-region"
     simpleSearchRegion: "#simple-search"
+#    resultsTableGrid: "#results-table"
+
+  App.vent.on "cleanHomeRegion", ->
+    RegionMan.removeRegion "carouselRegion"
+    
+  App.vent.on "fireUsrGuid", ->
+    RegionMan.addRegion "usrGuidRegion"
 
 
   App.addInitializer ->
     App.module("HeaderApp").start()
     App.module("MainApp").start()
+    App.module("UsrGuid").start()
 
   App.on "initialize:after", (options) ->
     if Backbone.history
